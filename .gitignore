@@ -4,6 +4,10 @@ data/*.npy
 data/*.npz
 notebooks/data/
 notebooks/results/
+_tmp_google_export.docx
+_report_assets/
+_rendered_report/
+reports/Final_Project_Report_sanitized.docx
 results/*.npy
 results/*.npz
 results/*.pkl
