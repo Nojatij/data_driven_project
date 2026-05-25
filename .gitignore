@@ -2,6 +2,8 @@ data/*.h5
 data/*.hdf5
 data/*.npy
 data/*.npz
+notebooks/data/
+notebooks/results/
 results/*.npy
 results/*.npz
 results/*.pkl

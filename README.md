@@ -7,28 +7,17 @@ The project focuses on two 1D PDEBench datasets:
 - 1D Burgers equation, `nu = 0.01`
 - 1D Advection equation, `beta = 0.4`
 
-The main notebook is prepared for Kaggle and can be run from top to bottom.
+The main notebook is designed to run on a regular local computer. No special accelerator is required.
 
 ## Main Notebook
 
-Open this notebook on Kaggle:
+Open and run:
 
 ```text
-notebooks/PDEBench_DMD_SINDy_Kaggle.ipynb
+notebooks/PDEBench_DMD_SINDy_Project.ipynb
 ```
 
-Recommended Kaggle settings:
-
-- Accelerator: GPU, for example T4 or P100
-- Internet: On, unless the HDF5 files are uploaded as a Kaggle Dataset
-- Python notebook environment
-
-The notebook automatically searches for data in:
-
-- `/kaggle/input`
-- `/kaggle/working/data`
-
-If data is missing and internet is enabled, it downloads the required files from DaRUS.
+The notebook searches for HDF5 files in the project folder and in `data/`. If the files are missing and internet is available, it downloads them automatically from DaRUS.
 
 ## What The Notebook Does
 
@@ -36,11 +25,11 @@ The notebook covers the full project workflow:
 
 1. Downloads or finds PDEBench HDF5 files.
 2. Reads `tensor`, `x-coordinate`, and time coordinates.
-3. Builds a manageable subset for Kaggle execution.
+3. Builds a manageable subset for local execution.
 4. Visualizes `u(x,t)` and time slices.
 5. Applies Dynamic Mode Decomposition (DMD) for future-state prediction.
 6. Applies PDE-FIND / SINDy for sparse PDE identification.
-7. Trains a compact FNO-style neural baseline on GPU.
+7. Trains a compact FNO-style neural baseline.
 8. Compares all methods using accuracy and runtime metrics.
 9. Exports plots, metric tables, coefficient tables, and a short summary.
 
@@ -76,9 +65,9 @@ The notebook includes a compact Fourier Neural Operator style model:
 - spectral convolution in Fourier space;
 - one-step autoregressive training;
 - rollout over the test interval;
-- GPU acceleration on Kaggle.
+- CPU execution is sufficient; CUDA can be used automatically if available.
 
-This satisfies the machine-learning baseline requirement without requiring the full official PDEBench training pipeline.
+This provides a machine-learning baseline for the advanced comparison without requiring a heavy training setup.
 
 ## Metrics
 
@@ -86,24 +75,26 @@ The notebook reports:
 
 - RMSE
 - normalized RMSE
+- MAE
+- MAPE with epsilon stabilization
 - max error
 - boundary RMSE
 - conserved-value RMSE
 - Fourier low/mid/high frequency errors
-- training or fitting time
+- training and prediction time
 
 Exported metric table:
 
 ```text
-/kaggle/working/results/metrics_table.csv
+results/metrics_table.csv
 ```
 
 ## Output Artifacts
 
-After running the notebook, Kaggle writes results to:
+After running the notebook, results are written to:
 
 ```text
-/kaggle/working/results
+results/
 ```
 
 Important files:
@@ -143,7 +134,7 @@ Project_12_PDEBench/
   README.md
   requirements.txt
   notebooks/
-    PDEBench_DMD_SINDy_Kaggle.ipynb
+    PDEBench_DMD_SINDy_Project.ipynb
   data/
     README.md
   docs/
@@ -156,14 +147,16 @@ Project_12_PDEBench/
   presentation/
 ```
 
-## How To Run On Kaggle
+## How To Run Locally
 
-1. Create a new Kaggle notebook.
-2. Upload `notebooks/PDEBench_DMD_SINDy_Kaggle.ipynb`.
-3. Turn on GPU.
-4. Turn on internet, or attach the HDF5 files as a Kaggle Dataset.
+1. Clone the repository.
+2. Install dependencies from `requirements.txt`.
+3. Put the HDF5 files into `data/`, or allow the notebook to download them.
+4. Open `notebooks/PDEBench_DMD_SINDy_Project.ipynb`.
 5. Run all cells.
-6. Download `/kaggle/working/results` for the presentation.
+6. Use the generated files in `results/` for the presentation.
+
+For a quick smoke test, reduce `max_samples`, increase `stride_x`, or lower `fno_epochs` in the notebook configuration.
 
 ## References
 
