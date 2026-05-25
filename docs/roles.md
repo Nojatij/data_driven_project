@@ -1,79 +1,87 @@
-# Распределение ролей
+# Role Distribution
 
-Цель: примерно равная нагрузка, но с учетом предпочтений команды. Егор больше программирует и не отвечает за презентацию как основной владелец; Магомед получает математическую часть; Дарья ведет презентацию, но ее вклад не сводится только к верстке слайдов; Виталий получает самостоятельный технический блок.
+The workload is designed to be roughly balanced while respecting the team's stated preferences. Egor focuses on programming and is not the main owner of the presentation. Magomedrashad owns the mathematical identification part. Daria leads the presentation and source narrative, but her contribution is not limited to slide formatting. Vitaliy owns an independent technical evaluation block.
 
 ## Balakin Egor
 
-Роль: code and experiment pipeline lead.
+Role: code and experiment pipeline lead.
 
-Что делает:
-- создает и поддерживает структуру проекта, окружение и воспроизводимый запуск;
-- пишет загрузчик HDF5 для PDEBench;
-- делает DMD reconstruction/prediction pipeline;
-- оформляет скрипты/ноутбуки так, чтобы команда могла запускать эксперименты одинаково;
-- помогает Дарье экспортировать графики, но не владеет финальной презентацией.
+Responsibilities:
 
-Ожидаемые артефакты:
-- `src/data_loader.py`;
-- `src/dmd.py`;
-- notebook или script для DMD экспериментов;
-- README по запуску кода.
+- maintain the project structure, environment notes, and reproducible execution workflow;
+- implement the HDF5 loader for PDEBench data;
+- implement the DMD reconstruction and prediction pipeline;
+- keep scripts and notebooks runnable by the rest of the team;
+- help export plots for the presentation without owning the final presentation work.
+
+Expected artifacts:
+
+- `src/data_loader.py`, if the notebook is later split into modules;
+- `src/dmd.py`, if the notebook is later split into modules;
+- DMD experiment notebook or equivalent script;
+- README instructions for running the code.
 
 ## Ismailov Magomedrashad
 
-Роль: mathematical modeling and identification lead.
+Role: mathematical modeling and identification lead.
 
-Что делает:
-- разбирает equations для 1D Burgers и 1D Advection;
-- формулирует, что именно должны восстановить SINDy/PDE-FIND;
-- проектирует библиотеку кандидатов для SINDy;
-- выбирает схему численных производных и регуляризацию;
-- интерпретирует найденные коэффициенты и объясняет, почему модель физически адекватна или нет.
+Responsibilities:
 
-Ожидаемые артефакты:
-- `docs/math_notes.md`;
-- описание DMD/SINDy для отчета;
-- таблица найденных PDE coefficients;
-- короткая проверка чувствительности к шуму/производным.
+- review the governing equations for 1D Burgers and 1D Advection;
+- define which terms SINDy/PDE-FIND should recover;
+- design the candidate library for sparse PDE identification;
+- choose or review numerical derivative and regularization settings;
+- interpret the identified coefficients and explain whether the recovered model is physically reasonable.
+
+Expected artifacts:
+
+- mathematical notes for DMD and SINDy/PDE-FIND;
+- method description for the final report;
+- coefficient interpretation table;
+- short sensitivity check for derivative and threshold choices.
 
 ## Daria Prochukhan
 
-Роль: presentation, paper synthesis, and visual results lead.
+Role: presentation, paper synthesis, and visual results lead.
 
-Что делает:
-- читает и конспектирует PDEBench paper и GitHub материалы на уровне narrative;
-- собирает структуру финальной презентации;
-- отвечает за понятные plots: heatmap `u(x,t)`, срезы `u(x)` по времени, prediction vs truth, error map;
-- оформляет результаты в слайды и следит, чтобы история была связной: data -> methods -> metrics -> conclusion.
+Responsibilities:
 
-Ожидаемые артефакты:
-- `presentation/` с финальными слайдами;
-- `docs/source_summary.md`;
-- список нужных картинок и финальные captions;
-- финальная таблица "что получилось / что не получилось".
+- synthesize the PDEBench paper and GitHub materials into a clear project narrative;
+- organize the final presentation structure;
+- select and caption the most important visual results, including heatmaps, time slices, prediction comparisons, and error curves;
+- ensure that the final story is coherent: data, methods, metrics, results, and conclusion.
+
+Expected artifacts:
+
+- final slide deck in `presentation/`;
+- source summary and presentation outline;
+- list of figures and final captions;
+- final "what worked / what did not work" comparison.
 
 ## Egorov Vitaliy
 
-Роль: baseline and evaluation lead.
+Role: baseline and evaluation lead.
 
-Что делает:
-- разбирает PDEBench baseline scripts для FNO/U-Net/PINN;
-- решает, что реалистично: запуск маленького baseline, использование pretrained model, или честное сравнение с published baseline;
-- пишет/адаптирует метрики: RMSE, nRMSE, max error, CPU time;
-- ведет таблицу экспериментов и сравнение DMD/SINDy/baseline;
-- помогает Егору с data split и проверкой корректности результатов.
+Responsibilities:
 
-Ожидаемые артефакты:
-- `src/metrics.py`;
-- `notebooks/baseline_evaluation.ipynb` или аналогичный скрипт;
+- inspect the PDEBench FNO, U-Net, and PINN baseline scripts;
+- decide which baseline comparison is realistic for the project scope;
+- implement or review metrics such as RMSE, nRMSE, MAE, MAPE, maximum error, and compute time;
+- maintain the experiment comparison table;
+- help validate the data split and result consistency.
+
+Expected artifacts:
+
+- `src/metrics.py`, if the notebook is later split into modules;
+- baseline evaluation notebook or equivalent script;
 - `results/metrics_table.csv`;
-- короткий вывод по accuracy vs compute time.
+- short conclusion on accuracy versus compute time.
 
-## Общая схема нагрузки
+## Workload Summary
 
-- Егор: примерно 25%, основной код и DMD.
-- Магомед: примерно 25%, математика и SINDy/PDE-FIND.
-- Дарья: примерно 25%, источники, визуализация, презентация.
-- Виталий: примерно 25%, baseline, метрики, таблицы сравнения.
+- Egor: approximately 25%, focused on core code and DMD.
+- Magomedrashad: approximately 25%, focused on mathematics and SINDy/PDE-FIND.
+- Daria: approximately 25%, focused on sources, visualization, and presentation.
+- Vitaliy: approximately 25%, focused on baseline evaluation, metrics, and comparison tables.
 
-Так роли независимы, но стыкуются: Егор дает рабочий pipeline, Магомед дает правильную идентификацию PDE, Виталий делает честную оценку, Дарья превращает это в понятный финальный результат.
+These roles are independent but connected: Egor provides the working pipeline, Magomedrashad validates the PDE identification, Vitaliy produces the evaluation comparison, and Daria turns the results into a coherent final presentation.

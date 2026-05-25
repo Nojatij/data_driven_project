@@ -1,19 +1,20 @@
-# Источники и заметки
+# References and Notes
 
-## Тема из Excel
+## Topic From The Project Spreadsheet
 
 Project 12: "Data-driven method application for PDE identification and dynamic prediction using PDEBench data".
 
-Ключевые требования из таблицы:
-- parsing, processing, visualization;
-- повторить или понять ML benchmark на pretrained ML models;
-- DMD или модификация DMD для анализа spatiotemporal data;
-- SINDy или модификация SINDy для восстановления исходной PDE;
-- сравнить reconstruction/prediction results;
-- сравнить с ML baseline по accuracy и CPU time;
-- сделать выводы о факторах, улучшающих system identification and reconstruction.
+Key requirements from the project table:
 
-## Основные ссылки
+- parse, process, and visualize PDEBench data;
+- understand or reproduce the machine-learning benchmark logic for pretrained or baseline models;
+- analyze spatiotemporal data using DMD or a DMD modification;
+- apply SINDy or a SINDy modification to test whether the original PDE structure can be reconstructed;
+- analyze DMD and SINDy reconstruction results;
+- compare machine-learning and data-driven methods by accuracy and computational efficiency;
+- conclude which factors improve system identification and reconstruction.
+
+## Main Sources
 
 - PDEBench GitHub: https://github.com/pdebench/PDEBench
 - PDEBench paper: https://arxiv.org/abs/2210.07182
@@ -24,58 +25,60 @@ Project 12: "Data-driven method application for PDE identification and dynamic p
 - 1D forward baseline runner: https://github.com/pdebench/PDEBench/blob/main/pdebench/models/run_forward_1D.sh
 - Metrics implementation: https://github.com/pdebench/PDEBench/blob/main/pdebench/models/metrics.py
 
-## Что важно из статьи PDEBench
+## PDEBench Paper Notes
 
-- PDEBench это benchmark suite для time-dependent PDE simulations.
-- В нем есть готовые данные и код для сравнения новых data-driven/ML моделей с numerical simulations и ML baselines.
-- В benchmark входят разные PDE, включая 1D Advection и 1D Burgers.
-- Baseline models в статье/репозитории: FNO, U-Net, PINN, Gradient-Based Inverse Method.
-- Данные лежат в HDF5 формате, обычно как `[b, t, x1, ..., xd, v]`, где `b` это samples, `t` время, `x` spatial dimensions, `v` channels.
-- Метрики шире стандартного RMSE: nRMSE, max error, boundary error, conserved value error, Fourier-space errors.
+- PDEBench is a benchmark suite for time-dependent PDE simulations.
+- It provides data and code for comparing new data-driven or machine-learning models against numerical simulations and ML baselines.
+- The benchmark includes several PDE families, including 1D Advection and 1D Burgers.
+- Baseline models in the paper and repository include FNO, U-Net, PINN, and a gradient-based inverse method.
+- Data are stored in HDF5 format, typically as `[b, t, x1, ..., xd, v]`, where `b` is the sample dimension, `t` is time, `x` are spatial dimensions, and `v` is the channel dimension.
+- PDEBench metrics go beyond standard RMSE and include nRMSE, maximum error, boundary error, conserved-value error, and Fourier-space errors.
 
-## Что важно из GitHub
+## GitHub Repository Notes
 
-- Репозиторий содержит генерацию данных, загрузчики, download scripts, visualization scripts и baseline training/evaluation.
-- Для 1D Advection/Burgers есть `data_gen_NLE`.
-- Для скачивания данных рекомендуют `download_direct.py`, но можно брать прямые DaRUS URLs.
-- Для baseline в `run_forward_1D.sh` уже перечислены FNO/U-Net/PINN команды и имена файлов.
-- Для визуализации 1D Burgers/Advection в `visualize_pdes.py` используются ключи `x-coordinate` и `tensor`.
+- The PDEBench repository contains data generation code, download utilities, visualization scripts, and baseline training/evaluation scripts.
+- The relevant 1D Advection/Burgers code is under `data_gen_NLE`.
+- Data can be downloaded through `download_direct.py` or by using direct DaRUS URLs.
+- `run_forward_1D.sh` lists FNO, U-Net, and PINN commands for the 1D baseline tasks.
+- The 1D Burgers/Advection visualization utilities use the HDF5 keys `x-coordinate` and `tensor`.
 
-## Данные для проекта
+## Project Data
 
-Основной файл:
+Main file:
+
 - PDE: Burgers
 - Filename: `1D_Burgers_Sols_Nu0.01.hdf5`
 - URL: https://darus.uni-stuttgart.de/api/access/datafile/281363
-- Path in PDEBench: `1D/Burgers/Train/`
+- PDEBench path: `1D/Burgers/Train/`
 - MD5: `e6d9a4f62baf9a29121a816b919e2770`
 
-Второй файл:
+Secondary file:
+
 - PDE: Advection
 - Filename: `1D_Advection_Sols_beta0.4.hdf5`
 - URL: https://darus.uni-stuttgart.de/api/access/datafile/255674
-- Path in PDEBench: `1D/Advection/Train/`
+- PDEBench path: `1D/Advection/Train/`
 - MD5: `d595bbfd2c659df995a93cd40d6ea568`
 
-## Предлагаемый экспериментальный дизайн
+## Proposed Experimental Design
 
-1. Start with Burgers `Nu0.01`.
-2. Use a small subset first: e.g. 20-100 samples, depending on memory.
-3. Split time:
-   - train: first 60-70% time steps;
-   - test: remaining 30-40% time steps.
+1. Start with Burgers `Nu0.01` as the main nonlinear case.
+2. Use a manageable subset first, for example 20-100 samples depending on memory.
+3. Split time into training and forecast intervals:
+   - training: first 60-70% of time steps;
+   - test: remaining 30-40% of time steps.
 4. Compare:
    - naive persistence baseline;
    - DMD prediction;
-   - SINDy/PDE-FIND simulation or one-step derivative fit;
-   - optional PDEBench FNO/U-Net/PINN baseline.
-5. Repeat the simplest DMD/SINDy sanity-check on Advection `beta0.4`.
+   - SINDy/PDE-FIND identification and rollout;
+   - a compact FNO-style machine-learning baseline.
+5. Repeat the DMD/SINDy sanity check on Advection `beta=0.4`.
 
-## Presentation story
+## Presentation Story
 
-1. Problem: learn/identify dynamics of PDE-generated data.
-2. Data: PDEBench, HDF5, Burgers and Advection.
-3. Methods: DMD for dynamic prediction, SINDy/PDE-FIND for equation identification.
-4. Baselines and metrics: RMSE/nRMSE/max error/CPU time.
-5. Results: plots and metrics table.
-6. Conclusion: what works, what fails, why, and how to improve.
+1. Problem: learn and identify dynamics from PDE-generated data.
+2. Data: PDEBench, HDF5, Burgers, and Advection.
+3. Methods: DMD for dynamic prediction and SINDy/PDE-FIND for equation identification.
+4. Baselines and metrics: RMSE, nRMSE, MAE, MAPE, and compute time.
+5. Results: plots, coefficient tables, and metrics table.
+6. Conclusion: what works, what fails, why it happens, and how the workflow can be improved.
